@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public bool isRunning = true;
 
+    public string currentGun = "blue";
+
     private void Awake()
     {
         MakeSingleton();

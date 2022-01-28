@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class GrapplingGun : MonoBehaviour {
 
+    //blueGun
     private LineRenderer lr;
     private Vector3 grapplePoint;
     public LayerMask whatIsGrappleable;
@@ -12,25 +13,54 @@ public class GrapplingGun : MonoBehaviour {
     //mine
     public GameObject grapplingPS;
     public float ropeReducePower = 4;
+    public float impulsePower = 50;
+
+
+    //redGun
+    public GameObject impulsePS;
+    public Rigidbody playerRb;
+
 
     void Awake() {
         lr = GetComponent<LineRenderer>();
     }
 
-    void Update() {
-        if (Input.GetMouseButtonDown(0)) {
-            EffectsON();
-            StartGrapple();
+    void Update() 
+    {
+        if (GameManager.instance.currentGun == "blue")
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                EffectsON();
+                StartGrapple();
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                EffectsOFF();
+                StopGrapple();
+            }
+            ReduceRopeLenght();
         }
-        else if (Input.GetMouseButtonUp(0)) {
-            EffectsOFF();
-            StopGrapple();
+        else if(GameManager.instance.currentGun == "red")
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                StopGrapple();
+
+                makeInpulse();
+                activateParticleSystemImpulse();
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                
+            }
+            
         }
-        ReduceRopeLenght();
     }
 
     //Called after Update
-    void LateUpdate() {
+    void LateUpdate() 
+    {
         DrawRope();
     }
 
@@ -104,5 +134,16 @@ public class GrapplingGun : MonoBehaviour {
 
     public Vector3 GetGrapplePoint() {
         return grapplePoint;
+    }
+
+    // para la gun roja
+    void makeInpulse()
+    {
+        playerRb.AddForce(gunTip.forward*impulsePower, ForceMode.Impulse );
+    }
+
+    void activateParticleSystemImpulse()
+    {
+        impulsePS.GetComponent<ParticleSystem>().Play();
     }
 }
